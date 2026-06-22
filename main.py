@@ -1,6 +1,24 @@
 import os
 import discord
 import requests
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
+
+# Renderの自動停止（ヘルスチェック）を回避するためのダミー窓口
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"OK")
+
+def run_dummy_server():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), SimpleHTTPRequestHandler)
+    print(f"Starting dummy server on port {port}")
+    server.serve_forever()
+
+# ダミーサーバーを裏側で同時に起動
+threading.Thread(target=run_dummy_server, daemon=True).start()
 
 TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
 DIFY_KEY = os.environ.get('DIFY_API_KEY')
