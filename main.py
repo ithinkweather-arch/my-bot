@@ -30,7 +30,7 @@ async def on_message(message):
                 if 'answer' in res_data:
                     await message.reply(res_data['answer'])
                 else:
-                    await message.reply("Difyからの応答にエラーが発生しました。")
+                    await message.reply(f"Difyからエラーが返ってきました: {res_data}")
             except Exception as e:
                 await message.reply(f"エラーが発生しました: {str(e)}")
 
